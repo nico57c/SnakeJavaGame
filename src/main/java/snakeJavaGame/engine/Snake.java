@@ -5,6 +5,8 @@ import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+import snakeJavaGame.engine.Config.KEYS;
+
 public class Snake {
 
     private Deque<Position> parts;
@@ -12,7 +14,25 @@ public class Snake {
     private final int maxY;
 
     public static enum DIR {
-        LEFT, RIGHT, UP, DOWN
+        LEFT, RIGHT, UP, DOWN;
+
+        public static DIR create(KEYS key) {
+            switch (key) {
+                case KEY_DOWN:
+                    return DIR.DOWN;
+                case KEY_UP:
+                    return DIR.UP;
+                case KEY_LEFT:
+                    return DIR.LEFT;
+                case KEY_RIGHT:
+                    return DIR.RIGHT;
+                case KEY_EXIT:
+                case KEY_PAUSE:
+                case KEY_VALID:
+                default:
+                    return null;
+            }
+        }
     };
 
     public Snake(int maxX, int maxY) {

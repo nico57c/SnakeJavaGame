@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class Config {
 
@@ -13,28 +16,54 @@ public class Config {
 
     private Properties properties;
 
-    private static final String WINDOW_WIDTH = "WINDOW_WIDTH";
-    private static final String WINDOW_HEIGHT = "WINDOW_HEIGHT";
-    private static final String LEVEL_WIDTH = "LEVEL_WIDTH";
-    private static final String LEVEL_HEIGHT = "LEVEL_HEIGHT";
-    private static final String LEVEL_BOXES_WIDTH = "BOXES_WIDTH";
-    private static final String LEVEL_BOXES_HEIGHT = "BOXES_HEIGHT";
-    private static final String LEVEL_BOXES_POS = "BOXES_POS";
+    public enum CONFIGS {
+        WINDOW_WIDTH("WINDOW_WIDTH"), WINDOW_HEIGHT("WINDOW_HEIGHT"), LEVEL_WIDTH("LEVEL_WIDTH"), LEVEL_HEIGHT(
+                "LEVEL_HEIGHT"), LEVEL_BOXES_WIDTH("BOXES_WIDTH"), LEVEL_BOXES_HEIGHT("BOXES_HEIGHT"), LEVEL_BOXES_POS(
+                        "BOXES_POS"), GAME_SPEED("GAME_SPEED");
 
-    private static final String KEY_DOWN = "K_DOWN";
-    private static final String KEY_UP = "K_UP";
-    private static final String KEY_LEFT = "K_LEFT";
-    private static final String KEY_RIGHT = "K_RIGHT";
-    private static final String KEY_PAUSE = "K_PAUSE";
-    private static final String KEY_EXIT = "K_EXIT";
+        private String value;
 
-    private static final String GAME_SPEED = "GAME_SPEED";
+        CONFIGS(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        };
+
+        public static List<String> getValues() {
+            return new ArrayList<CONFIGS>(Arrays.asList(CONFIGS.values())).stream().map(CONFIGS::getValue)
+                    .collect(Collectors.toList());
+        }
+
+    }
+
+    public enum KEYS {
+        KEY_DOWN("K_DOWN"), KEY_UP("K_UP"), KEY_LEFT("K_LEFT"), KEY_RIGHT("K_RIGHT"), KEY_PAUSE("K_PAUSE"), KEY_EXIT(
+                "K_EXIT"), KEY_VALID("K_VALID");
+
+        private String value;
+
+        KEYS(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        };
+
+        public static List<String> getValues() {
+            return new ArrayList<KEYS>(Arrays.asList(KEYS.values())).stream().map(KEYS::getValue)
+                    .collect(Collectors.toList());
+        }
+
+    };
 
     public Config() {
         ;
     }
 
-    public boolean load(Path file) throws IOException {
+    public boolean load(Path file) throws IOException, InterruptedException {
         this.file = file;
         if (this.file.toFile().exists()) {
             return load(Files.newInputStream(file));
@@ -47,65 +76,82 @@ public class Config {
         this.properties = new Properties();
         this.properties.load(input);
 
-        return this.properties.keySet().containsAll(Arrays.asList(WINDOW_WIDTH, WINDOW_HEIGHT, LEVEL_WIDTH,
-                LEVEL_HEIGHT, LEVEL_BOXES_WIDTH, LEVEL_BOXES_HEIGHT, LEVEL_BOXES_POS, GAME_SPEED));
+        List<String> keys = CONFIGS.getValues();
+        keys.addAll(KEYS.getValues());
+
+        if (!this.properties.keySet().containsAll(keys)) {
+
+            System.out.println("Config keys are not presents : ");
+            keys.stream().filter(item -> !properties.containsKey(item)).forEach(System.out::println);
+
+            System.out.println("Config keys are unknown : ");
+            properties.keySet().stream().filter(item -> !keys.contains(item)).forEach(System.out::println);
+
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public int windowWidth() {
-        return Integer.valueOf(properties.getProperty(WINDOW_WIDTH));
+        return Integer.valueOf(properties.getProperty(CONFIGS.WINDOW_WIDTH.getValue()));
     }
 
     public int windowHeight() {
-        return Integer.valueOf(properties.getProperty(WINDOW_HEIGHT));
+        return Integer.valueOf(properties.getProperty(CONFIGS.WINDOW_HEIGHT.getValue()));
     }
 
     public int levelWidth() {
-        return Integer.valueOf(properties.getProperty(LEVEL_WIDTH));
+        return Integer.valueOf(properties.getProperty(CONFIGS.LEVEL_WIDTH.getValue()));
     }
 
     public int levelHeight() {
-        return Integer.valueOf(properties.getProperty(LEVEL_HEIGHT));
+        return Integer.valueOf(properties.getProperty(CONFIGS.LEVEL_HEIGHT.getValue()));
     }
 
     public int levelBoxesWidth() {
-        return Integer.valueOf(properties.getProperty(LEVEL_BOXES_WIDTH));
+        return Integer.valueOf(properties.getProperty(CONFIGS.LEVEL_BOXES_WIDTH.getValue()));
     }
 
     public int levelBoxesHeight() {
-        return Integer.valueOf(properties.getProperty(LEVEL_BOXES_HEIGHT));
+        return Integer.valueOf(properties.getProperty(CONFIGS.LEVEL_BOXES_HEIGHT.getValue()));
     }
 
     public Position[] levelBoxes() {
-        String positions = properties.getProperty(LEVEL_BOXES_POS);
+        String positions = properties.getProperty(CONFIGS.LEVEL_BOXES_POS.getValue());
         return Position.valuesOf(positions);
     }
 
+    public int gameSpeed() {
+        return Integer.valueOf(properties.getProperty(CONFIGS.GAME_SPEED.getValue()));
+    }
+
     public String keyUp() {
-        return properties.getProperty(KEY_UP);
+        return properties.getProperty(KEYS.KEY_UP.getValue());
     }
 
     public String keyDown() {
-        return properties.getProperty(KEY_DOWN);
+        return properties.getProperty(KEYS.KEY_DOWN.getValue());
     }
 
     public String keyLeft() {
-        return properties.getProperty(KEY_LEFT);
+        return properties.getProperty(KEYS.KEY_LEFT.getValue());
     }
 
     public String keyRight() {
-        return properties.getProperty(KEY_RIGHT);
+        return properties.getProperty(KEYS.KEY_RIGHT.getValue());
     }
 
     public String keyPause() {
-        return properties.getProperty(KEY_PAUSE);
+        return properties.getProperty(KEYS.KEY_PAUSE.getValue());
     }
 
     public String keyExit() {
-        return properties.getProperty(KEY_EXIT);
+        return properties.getProperty(KEYS.KEY_EXIT.getValue());
     }
 
-    public int gameSpeed() {
-        return Integer.valueOf(properties.getProperty(GAME_SPEED));
+    public String keyValid() {
+        return properties.getProperty(KEYS.KEY_VALID.getValue());
     }
 
 }

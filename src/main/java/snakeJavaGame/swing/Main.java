@@ -15,11 +15,11 @@ public class Main extends JFrame {
     private static final long serialVersionUID = 1L;
 
     public Main() {
-        
+
         Config config = new Config();
         try {
-            InputStream file = getClass().getResource("/config.ini").openStream();
-            if (!config.load(file)) {
+            InputStream input = getClass().getClassLoader().getResourceAsStream("config.ini");
+            if (!config.load(input)) {
                 System.out.println("Config file load error!");
                 return;
             }
@@ -51,7 +51,8 @@ public class Main extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                JFrame ex = new Main();
+                JFrame ex;
+                ex = new Main();
                 ex.setVisible(true);
             }
         });

@@ -80,11 +80,19 @@ public class Player implements Serializable {
         this.score = score;
     }
 
+    public void incScore(int score) {
+        this.score = score;
+    }
+
     public int getScore() {
         return score;
     }
 
     public String toString() {
         return getName() + "\t" + getCountry() + "/" + getGenre() + "\t\t" + getScore();
+    }
+
+    public static Player defaultPlayer() {
+        return new Player("Player", "__", Genre.M, 0);
     }
 }

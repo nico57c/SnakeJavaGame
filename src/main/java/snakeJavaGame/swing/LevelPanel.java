@@ -9,8 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 import snakeJavaGame.engine.Config;
-import snakeJavaGame.engine.Engine;
-import snakeJavaGame.engine.Snake.DIR;
+import snakeJavaGame.engine.Config.KEYS;
 
 public class LevelPanel extends JPanel {
 
@@ -34,7 +33,6 @@ public class LevelPanel extends JPanel {
 
         this.config = config;
         this.engine = engine;
-        engine.startWalk();
 
         registerKeyboardAction(new AbstractAction() {
             private static final long serialVersionUID = 1L;
@@ -42,9 +40,9 @@ public class LevelPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Pause");
-                engine.pause();
+                engine.input(KEYS.KEY_PAUSE);
             }
-        }, Engine.EVENT_PAUSE, KeyStroke.getKeyStroke(config.keyPause()), WHEN_FOCUSED);
+        }, KEYS.KEY_PAUSE.getValue(), KeyStroke.getKeyStroke(config.keyPause()), WHEN_FOCUSED);
 
         registerKeyboardAction(new AbstractAction() {
             private static final long serialVersionUID = 1L;
@@ -52,10 +50,9 @@ public class LevelPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Down");
-                if (!engine.isPause())
-                    engine.snakeDirection(DIR.DOWN);
+                engine.input(KEYS.KEY_DOWN);
             }
-        }, Engine.EVENT_DOWN, KeyStroke.getKeyStroke(config.keyDown()), WHEN_FOCUSED);
+        }, KEYS.KEY_DOWN.getValue(), KeyStroke.getKeyStroke(config.keyDown()), WHEN_FOCUSED);
 
         registerKeyboardAction(new AbstractAction() {
             private static final long serialVersionUID = 1L;
@@ -63,10 +60,9 @@ public class LevelPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Up");
-                if (!engine.isPause())
-                    engine.snakeDirection(DIR.UP);
+                engine.input(KEYS.KEY_UP);
             }
-        }, Engine.EVENT_UP, KeyStroke.getKeyStroke(config.keyUp()), WHEN_FOCUSED);
+        }, KEYS.KEY_UP.getValue(), KeyStroke.getKeyStroke(config.keyUp()), WHEN_FOCUSED);
 
         registerKeyboardAction(new AbstractAction() {
             private static final long serialVersionUID = 1L;
@@ -74,10 +70,9 @@ public class LevelPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Left");
-                if (!engine.isPause())
-                    engine.snakeDirection(DIR.LEFT);
+                engine.input(KEYS.KEY_LEFT);
             }
-        }, Engine.EVENT_LEFT, KeyStroke.getKeyStroke(config.keyLeft()), WHEN_FOCUSED);
+        }, KEYS.KEY_LEFT.getValue(), KeyStroke.getKeyStroke(config.keyLeft()), WHEN_FOCUSED);
 
         registerKeyboardAction(new AbstractAction() {
             private static final long serialVersionUID = 1L;
@@ -85,10 +80,9 @@ public class LevelPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Right");
-                if (!engine.isPause())
-                    engine.snakeDirection(DIR.RIGHT);
+                engine.input(KEYS.KEY_RIGHT);
             }
-        }, Engine.EVENT_RIGHT, KeyStroke.getKeyStroke(config.keyRight()), WHEN_FOCUSED);
+        }, KEYS.KEY_RIGHT.getValue(), KeyStroke.getKeyStroke(config.keyRight()), WHEN_FOCUSED);
 
         registerKeyboardAction(new AbstractAction() {
             private static final long serialVersionUID = 1L;
@@ -96,9 +90,22 @@ public class LevelPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Exit");
-                engine.exit();
+                engine.input(KEYS.KEY_EXIT);
             }
-        }, Engine.EVENT_EXIT, KeyStroke.getKeyStroke(config.keyExit()), WHEN_FOCUSED);
+        }, KEYS.KEY_EXIT.getValue(), KeyStroke.getKeyStroke(config.keyExit()), WHEN_FOCUSED);
+
+        registerKeyboardAction(new AbstractAction() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Valid");
+                engine.input(KEYS.KEY_VALID);
+            }
+        }, KEYS.KEY_VALID.getValue(), KeyStroke.getKeyStroke(config.keyValid()), WHEN_FOCUSED);
+
+        // START GAME :
+        engine.run();
     }
 
     @Override

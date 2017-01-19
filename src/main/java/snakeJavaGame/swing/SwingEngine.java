@@ -36,10 +36,18 @@ public class SwingEngine extends Engine {
     }
 
     public void renderGameOver(Graphics graph) {
-        if (gameOver()) {
+        if (isGameOver()) {
             graph.setColor(Color.RED);
             graph.drawString("GAME OVER!  (escape to exit)", config.levelBoxesWidth() / 2,
                     config.levelBoxesHeight() / 2);
         }
+    }
+
+    public void renderHighScore(Graphics graph) {
+        // TODO renderHighScore
+    }
+
+    public void renderPlayerInput(Graphics graph) {
+        // TODO renderPlayerInput
     }
 }

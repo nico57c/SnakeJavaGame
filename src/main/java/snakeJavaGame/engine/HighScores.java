@@ -22,7 +22,7 @@ public class HighScores {
         ranking();
     }
 
-    public void ranking() {
+    public Map<Integer, Player> ranking() {
         Comparator<Player> compareScore = Comparator.comparing(Player::getScore).reversed()
                 .thenComparing(Comparator.comparing(Player::getCountry))
                 .thenComparing(Comparator.comparing(Player::getName))
@@ -31,6 +31,11 @@ public class HighScores {
         this.scores.stream().sorted(compareScore).forEachOrdered(player -> {
             ranking.put(ranking.size() + 1, player);
         });
+        return ranking;
+    }
+
+    public Map<Integer, Player> getRanking() {
+        return ranking;
     }
 
     public void addPlayer(Player player) throws ValidationException {
@@ -52,5 +57,4 @@ public class HighScores {
         return this.ranking.entrySet().stream().map(entry -> entry.getKey() + "\t\t" + entry.getValue().toString())
                 .reduce("", (a, b) -> a + "\n" + b);
     }
-
 }
